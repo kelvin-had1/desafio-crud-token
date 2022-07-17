@@ -33,7 +33,8 @@ module.exports = class User{
         try {
             let users = await this.User.findAll()
             return res.send(JSON.stringify(users, null, 2))
-        } catch (error) {            
+        } catch (error) {                        
+            console.log(error)
             return res.send({erro: "erro inesperado!"})
         }
         
