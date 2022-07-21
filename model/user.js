@@ -28,22 +28,23 @@ module.exports = class User{
         })
     }
 
-
-    async getUsers(req, res){
+    async login(req, res){
         try {
-            let users = await this.User.findAll()
-            return res.send(JSON.stringify(users, null, 2))
-        } catch (error) {                        
+            await db.sync()
+            const user = await this.User.findAll({where: {email: req.body.email}})
+            
+            return true
+
+
+        } catch (error) {
             console.log(error)
-            return res.send({erro: "erro inesperado!"})
+            return false
         }
-        
-        
     }
- 
+
     async insertUser(req, res){
         try {
-            await db.sync()        
+            await db.sync()
             const user = this.User.create({ email: this.email, pwsd: this.password})        
             return res.send({message: "OK"})    
         } catch (error) {             
@@ -53,5 +54,19 @@ module.exports = class User{
         }   
                  
     }
+
+    async getUsers(req, res){
+        try {
+            await db.sync()
+            let users = await this.User.findAll()
+            return res.send(JSON.stringify(users, null, 2))
+        } catch (error) {            
+            return res.send({erro: "erro inesperado!"})
+        }
+        
+        
+    }
+ 
+    
 
 }
