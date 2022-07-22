@@ -11,7 +11,6 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(cors())
 app.use('/api', router)
 
-
 app.listen(PORT, ()=>{
     console.log(`Servidor está rodando na porta ${PORT}`)
 })
