@@ -68,6 +68,8 @@ module.exports = class User{
         }
     }
 
+    
+
     async insertUser(req, res){
         try {
             await db.sync()
@@ -85,7 +87,22 @@ module.exports = class User{
         try {
             await db.sync()
             let users = await this.User.findAll()
-            return res.send(JSON.stringify(users, null, 2))
+            //implementação para testes
+            const token = req.body.token
+            jwt.verify(token, config.JWT_KEY, (err, userInfo) => {
+                if (err) {
+                    res.status(403).end();
+                    return
+                }
+                if(userInfo.type == 'read'){
+                    return res.send(JSON.stringify(users, null, 2))
+
+                }else{
+                    return res.status(401).send({message: "Not authorized"})
+
+                }
+            })
+
         } catch (error) {            
             return res.send({erro: "erro inesperado!"})
         }
