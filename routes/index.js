@@ -4,9 +4,9 @@ const user = require('../model/user.js')
 const jwt = 'a'
 
 router.route('/usuarios')
-    .post((req, res) => {    
-                    
-        let User = new user()         
+    .get((req, res) => {    
+                      
+        let User = new user()                         
         User.getUsers(req,res)        
             
         })

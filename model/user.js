@@ -77,7 +77,7 @@ module.exports = class User{
             return res.send({message: "OK"})    
         } catch (error) {             
             console.log(error)
-            return res.status(401).send({erro: "Unexpected error"})                                
+            return res.status(200).send({error: "Unexpected error"})                                
                                      
         }   
                  
@@ -88,10 +88,11 @@ module.exports = class User{
             await db.sync()
             let users = await this.User.findAll()
             //implementação para testes
-            const token = req.body.token
+            const token = req.headers['token']
+
             jwt.verify(token, config.JWT_KEY, (err, userInfo) => {
                 if (err) {
-                    res.status(403).end();
+                    res.status(200).json({erro: "Unexpected error"});
                     return
                 }
                 if(userInfo.type == 'read'){
@@ -104,7 +105,7 @@ module.exports = class User{
             })
 
         } catch (error) {            
-            return res.send({erro: "erro inesperado!"})
+            return res.send({error: "erro inesperado!"})
         }
         
         
