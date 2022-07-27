@@ -38,7 +38,6 @@ module.exports = class Book{
                     res.status(200).json({erro: "Unexpected error"});
                     return
                 }
-
                 if(userInfo.type == 'read'){
                     return res.status(200).send(JSON.stringify(books, null, 2))
 
