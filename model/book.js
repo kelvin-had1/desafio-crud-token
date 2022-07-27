@@ -25,37 +25,6 @@ module.exports = class Book{
         })
     }
 
-
-    async getBook(req, res){
-        try {
-            let token = req.headers['token']
-            await db.sync()
-            const books = await this.Book.findAll()
-
-
-            jwt.verify(token, config.JWT_KEY, (err, userInfo) =>{
-                if(err){
-                    res.status(200).json({erro: "Unexpected error"});
-                    return
-                }
-                if(userInfo.type == 'read'){
-                    return res.status(200).send(JSON.stringify(books, null, 2))
-
-                }else{
-                    return res.status(200).json({message: "Not Authorized"})
-
-                }
-            })
-
-
-        } catch (error) {
-            console.log(error)
-            return res.status(400).send({message: "Unexpected Error"})
-            
-        }
-    }
-
-
     async insertBook(req, res){
         try {
             let token = req.body.token
@@ -84,6 +53,34 @@ module.exports = class Book{
             return res.status(400).send({message: "Unexpected Error"})
         }
 
+    }
+    async getBook(req, res){
+        try {
+            let token = req.headers['token']
+            await db.sync()
+            const books = await this.Book.findAll()
+
+
+            jwt.verify(token, config.JWT_KEY, (err, userInfo) =>{
+                if(err){
+                    res.status(200).json({erro: "Unexpected error"});
+                    return
+                }
+                if(userInfo.type == 'read'){
+                    return res.status(200).send(JSON.stringify(books, null, 2))
+
+                }else{
+                    return res.status(200).json({message: "Not Authorized"})
+
+                }
+            })
+
+
+        } catch (error) {
+            console.log(error)
+            return res.status(400).send({message: "Unexpected Error"})
+            
+        }
     }
 
     async saveBook(res){
