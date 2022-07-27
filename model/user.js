@@ -42,21 +42,25 @@ module.exports = class User{
                 }
                 
                 if(result){
-                    const token = jwt.sign({
-                        email: user[0].email,
-                        senha: user[0].pwsd,
+                    const readToken = jwt.sign({
+                        email: user[0].email,                        
                         type: 'read'
                     }, config.JWT_KEY, {
                         expiresIn: "2 days"
                     })
-                    return res.status(200).send({message: "ok", readToken: token})
+                    
+                    const writeToken = jwt.sign({
+                        email: user[0].email,
+                        type: 'write'
+                    }, config.JWT_KEY, {
+                        expiresIn: "30s"
+                    })
+                    return res.status(200).send({message: "ok", readToken: readToken, writeToken: writeToken})
 
                 }else{
                     
                     return res.status(401).send({message: "Not authorized"})
-                }
-
-                
+                }                
 
             })
             
@@ -87,7 +91,7 @@ module.exports = class User{
         try {
             await db.sync()
             let users = await this.User.findAll()
-            //implementação para testes
+            
             const token = req.headers['token']
 
             jwt.verify(token, config.JWT_KEY, (err, userInfo) => {
@@ -99,7 +103,7 @@ module.exports = class User{
                     return res.send(JSON.stringify(users, null, 2))
 
                 }else{
-                    return res.status(401).send({message: "Not authorized"})
+                    return res.status(200).send({message: "Not authorized"})
 
                 }
             })
